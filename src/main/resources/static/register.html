@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Register - Crypto Messenger</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Register New Account</h2>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="login">Login:</label>
+                <input type="text" id="login" name="login" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Register</button>
+        </form>
+        <p id="message"></p>
+        <p>Already have an account? <a href="/">Sign In</a></p>
+    </div>
+
+    <script>
+        // Этот скрипт можно будет вынести в отдельный файл, но для простоты пока оставим здесь
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const login = document.getElementById('login').value;
+            const password = document.getElementById('password').value;
+            const messageEl = document.getElementById('message');
+
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ login, password })
+            });
+
+            if (response.ok) {
+                messageEl.style.color = 'green';
+                messageEl.textContent = 'Registration successful! You can now sign in.';
+            } else {
+                messageEl.style.color = 'red';
+                messageEl.textContent = 'Registration failed. Login might be taken.';
+            }
+        });
+    </script>
+</body>
+
+</html>

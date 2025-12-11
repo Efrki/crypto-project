@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/crypto_chat
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop # ВНИМАНИЕ: удаляет и создает таблицы при каждом запуске. Только для разработки!
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  application:
+    name: crypto-project
+
+app:
+  jwtSecret: "YourSuperSecretKeyForCryptoProjectChangeThis" # Замени это на любую длинную и сложную строку
+  jwtExpirationInMs: 86400000 # Время жизни токена в миллисекундах (здесь 24 часа)

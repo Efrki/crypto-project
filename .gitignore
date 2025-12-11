@@ -1,0 +1,25 @@
+# Build artifacts
+build/
+.gradle/
+out/
+
+# IDE configuration files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Log files
+*.log
+
+# Local development files
+*.local
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Gradle cache
+.gradle
+
+/build/
