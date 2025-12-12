@@ -1,12 +1,12 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/crypto_chat
-    username: postgres
-    password: postgres
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/crypto_chat}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop # ВНИМАНИЕ: удаляет и создает таблицы при каждом запуске. Только для разработки!
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:create-drop} # Для продакшена лучше использовать 'validate' через переменную окружения
     show-sql: true
     properties:
       hibernate:
@@ -15,5 +15,5 @@ spring:
     name: crypto-project
 
 app:
-  jwtSecret: "YourSuperSecretKeyForCryptoProjectChangeThis" # Замени это на любую длинную и сложную строку
+  jwtSecret: ${JWT_SECRET:YourSuperSecretKeyForCryptoProjectChangeThis} # На сервере эта переменная должна быть установлена
   jwtExpirationInMs: 86400000 # Время жизни токена в миллисекундах (здесь 24 часа)
