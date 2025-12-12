@@ -18,8 +18,4 @@ out/
 # Operating System files
 .DS_Store
 Thumbs.db
-
-# Gradle cache
-.gradle
-
-/build/
+.amazonq
