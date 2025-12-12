@@ -189,6 +189,38 @@ function initializeApp() {
         }
     });
 
+    document.getElementById('attach-file-btn').addEventListener('click', () => {
+        document.getElementById('file-input').click();
+    });
+
+    document.getElementById('file-input').addEventListener('change', async (event) => {
+        const file = event.target.files[0];
+        if (file && currentChatId) {
+            const session = chatSessionKeys[currentChatId];
+            if (!session || !session.sharedSecret) {
+                alert("Error: Shared secret not computed for this chat. Cannot send file.");
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const fileData = e.target.result;
+                const fileName = file.name;
+                const fileType = file.type;
+                
+                // Encrypt file metadata + data
+                const fileMessage = `FILE:${fileName}:${fileType}:${fileData}`;
+                const iv = "000102030405060708090a0b0c0d0e0f";
+                const ciphertext = RC6.encrypt(fileMessage, session.sharedSecret, iv);
+                
+                console.log(`Encrypting file "${fileName}"`);
+                await sendMessage(currentChatId, ciphertext);
+                event.target.value = ''; // Clear file input
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
     document.getElementById('send-message-form').addEventListener('submit', async (event) => {
         event.preventDefault();
         const messageInput = document.getElementById('message-input');
@@ -523,7 +555,32 @@ function initializeApp() {
             messageElement.classList.add('outgoing');
         }
 
-        messageElement.textContent = `${message.senderUsername}: ${decryptedText}`;
+        // Check if it's a file
+        if (decryptedText.startsWith('FILE:')) {
+            const parts = decryptedText.split(':');
+            const fileName = parts[1];
+            const fileType = parts[2];
+            const fileData = parts.slice(3).join(':');
+            
+            messageElement.innerHTML = `<strong>${message.senderUsername}:</strong> `;
+            
+            if (fileType.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.src = fileData;
+                img.className = 'file-preview';
+                messageElement.appendChild(img);
+            } else {
+                const link = document.createElement('a');
+                link.href = fileData;
+                link.download = fileName;
+                link.className = 'file-download';
+                link.textContent = `📎 ${fileName}`;
+                messageElement.appendChild(link);
+            }
+        } else {
+            messageElement.textContent = `${message.senderUsername}: ${decryptedText}`;
+        }
+
         messagesArea.appendChild(messageElement);
         messagesArea.scrollTop = messagesArea.scrollHeight;
     }

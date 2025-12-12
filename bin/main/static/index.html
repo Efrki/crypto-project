@@ -91,7 +91,9 @@
         <h3 id="chat-with-user"></h3>
         <div id="messages-area"></div>
         <form id="send-message-form">
-            <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off" required>
+            <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off">
+            <input type="file" id="file-input" style="display:none">
+            <button type="button" id="attach-file-btn" title="Attach file">📎</button>
             <button type="submit">Send</button>
         </form>
     </div>
